@@ -18,6 +18,7 @@ class Menu extends Component {
     this.state = {
       openedKeys: Menu.getOpenedKeys(props),
       collapsed: props.collapsed,
+      defaultSelectedKeys: [Menu.getCurrentKey(this.props)]
     };
   }
 
@@ -26,7 +27,7 @@ class Menu extends Component {
     const { collapsed: oldCollapsed } = prevState;
     let state = { collapsed };
     if (collapsed && !oldCollapsed) {
-      state.openedKeys = [];
+      state.openedKeys = undefined;
     } else if (!collapsed && oldCollapsed) {
       state.openedKeys = Menu.getOpenedKeys(nextProps);
     }
@@ -53,8 +54,7 @@ class Menu extends Component {
   }
 
   handleOpenChange = (keys) => {
-    console.log(keys);
-    const { openedKeys } = this.state;
+    const { openedKeys = [] } = this.state;
     if (keys.length < openedKeys.length) {
       this.setState({ openedKeys: keys });
     } else {
@@ -114,15 +114,19 @@ class Menu extends Component {
   }
 
   render() {
-    const { collapsed } = this.state;
+    const { collapsed, defaultSelectedKeys, openedKeys } = this.state;
+    const openKeyProps = {};
+    if (openedKeys) {
+      openKeyProps.openKeys = openedKeys;
+    }
     return (
       <div>
         <AntMenu
           theme="dark"
           mode={collapsed ? 'vertical' : 'inline'}
           inlineCollapsed={collapsed}
-          selectedKeys={[Menu.getCurrentKey(this.props)]}
-          openKeys={this.state.openedKeys}
+          defaultSelectedKeys={defaultSelectedKeys}
+          { ...openKeyProps }
           onOpenChange={this.handleOpenChange}
         >
           { this.renderMenu(this.menuTree) }
