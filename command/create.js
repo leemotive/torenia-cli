@@ -9,14 +9,11 @@ const templateRoot = path.resolve(__dirname, '../template');
 
 module.exports = function (data) {
 
-  const projectRoot = path.resolve(cwd, data.name);
+  const { name } = data;
 
-  if (fs.existsSync(projectRoot)) {
-    console.error(`${projectRoot} has exist`);
-    return;
-  }
+  const projectRoot = path.resolve(cwd, name);
 
-  fs.mkdirSync(projectRoot);
+  fse.ensureDirSync(projectRoot);
 
   const walker = walk.walk(path.resolve(templateRoot));
   let hasRejected = false;
@@ -57,7 +54,7 @@ module.exports = function (data) {
     const filename = fileStats.name;
     const newRoot = root.replace(templateRoot, projectRoot);
     try {
-      fs.mkdirSync(path.resolve(newRoot, filename));
+      fse.ensureDirSync(path.resolve(newRoot, filename));
     } catch(e) {
       hasRejected = true;
     }

@@ -4,16 +4,13 @@ import { routerRedux } from 'dva/router';
 import { <%= history %> } from 'history';
 
 import renderRoutes from 'utils/renderRoutes';
+import routes from './.torenia/router';
 
 const { ConnectedRouter } = routerRedux;
 
 window.g_history = <%= history %>({
   basename: window.routerBase
 });
-
-// routes start
-
-// routes end
 
 export default () => (
   <ConnectedRouter history={window.g_history}>

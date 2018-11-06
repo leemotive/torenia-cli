@@ -1,8 +1,7 @@
-// menus start
+import menu from '../.torenia/menu';
 
-// menus end
 
-exports = module.exports = {
+export default {
   name: '用户中心',
   menu,
   menuSort: [

@@ -16,30 +16,44 @@ class Menu extends Component {
     super(props);
     this.menuTree = arrayToTree(menu, 'key', 'pKey', 'children');
     this.state = {
-      openedKeys: this.getOpenedKeys()
+      openedKeys: Menu.getOpenedKeys(props),
+      collapsed: props.collapsed,
     };
   }
 
-  getCurrentKey() {
-    const { pathname } = this.props.location;
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { collapsed } = nextProps;
+    const { collapsed: oldCollapsed } = prevState;
+    let state = { collapsed };
+    if (collapsed && !oldCollapsed) {
+      state.openedKeys = [];
+    } else if (!collapsed && oldCollapsed) {
+      state.openedKeys = Menu.getOpenedKeys(nextProps);
+    }
+    return { ...state };
+  }
+
+  static getCurrentKey(props) {
+    const { pathname } = props.location;
     const key = pathname.replace(/^\//, '');
     const currentMenu = menu.find(m => m.route === pathname || key === m.key);
     return currentMenu && currentMenu.key;
   }
 
-  getOpenedKeys() {
-    let currentKey = this.getCurrentKey();
+  static getOpenedKeys(props) {
+    let currentKey = Menu.getCurrentKey(props);
     const openedKeys = [];
 
-    let pKey = menuMap[currentKey].pKey;
+    let pKey = menuMap[currentKey]?.pKey;
     while(pKey) {
       openedKeys.push(pKey);
-      pKey = menuMap[pKey].pKey;
+      pKey = menuMap[pKey]?.pKey;
     }
     return openedKeys;
   }
 
   handleOpenChange = (keys) => {
+    console.log(keys);
     const { openedKeys } = this.state;
     if (keys.length < openedKeys.length) {
       this.setState({ openedKeys: keys });
@@ -100,14 +114,14 @@ class Menu extends Component {
   }
 
   render() {
-    const { collapsed } = this.props;
+    const { collapsed } = this.state;
     return (
       <div>
         <AntMenu
           theme="dark"
           mode={collapsed ? 'vertical' : 'inline'}
           inlineCollapsed={collapsed}
-          selectedKeys={[this.getCurrentKey()]}
+          selectedKeys={[Menu.getCurrentKey(this.props)]}
           openKeys={this.state.openedKeys}
           onOpenChange={this.handleOpenChange}
         >

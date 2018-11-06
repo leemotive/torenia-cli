@@ -3,6 +3,7 @@ const walk = require('walk');
 const fs = require('fs');
 const JSON5 = require('json5');
 const path = require('path');
+const fse = require('fs-extra');
 
 const cwd = process.cwd();
 const srcDir = `${cwd}/src`;
@@ -42,7 +43,7 @@ module.exports = () => {
         }
       })
     } else if ('model.js' === name || root.endsWith('/models') && path.extname(name) === '.js') {
-      models.push(`app.model(require('${fullname}').default);`)
+      models.push(`  require('${fullname}').default,`)
     }
 
     next();
@@ -70,10 +71,8 @@ module.exports = () => {
       quote: ' ',
       space: 2,
     }).replace(/(: ) /g, '$1').replace(/ ,/g, ',');
-    const routesFile = `${srcDir}/router.js`;
-    let content = fs.readFileSync(routesFile, 'utf8');
-    content = content.replace(/(\/\/ routes start\n)(.|\n)*(\/\/ routes end)/, `$1const routes = ${routesString};\n$3`);
-    fs.writeFileSync(routesFile, content, {
+    const routesFile = `${srcDir}/.torenia/router.js`;
+    fse.outputFileSync(routesFile, `export default ${routesString};\n`, {
       encoding: 'utf8'
     });
 
@@ -96,20 +95,16 @@ module.exports = () => {
       quote: '\'',
       space: 2,
     });
-    const configFile = `${srcDir}/utils/config.js`;
-    content = fs.readFileSync(configFile, 'utf8');
-    content = content.replace(/(\/\/ menus start\n)(.|\n)*(\/\/ menus end)/, `$1const menu = ${menuString};\n$3`)
-    fs.writeFileSync(configFile, content, {
+    const configFile = `${srcDir}/.torenia/menu.js`;
+    fse.outputFileSync(configFile, `export default ${menuString};\n`, {
       encoding: 'utf8'
     });
 
 
     // model生成
     const modelsString = models.join('\n');
-    const containerFile = `${srcDir}/container.js`;
-    content = fs.readFileSync(containerFile, 'utf8');
-    content = content.replace(/(\/\/ models start\n)(.|\n)*(\/\/ models end)/, `$1${modelsString}\n$3`);
-    fs.writeFileSync(containerFile, content, {
+    const containerFile = `${srcDir}/.torenia/models.js`;
+    fs.writeFileSync(containerFile, `export default [\n${modelsString}\n];\n`, {
       encoding: 'utf8'
     });
 
