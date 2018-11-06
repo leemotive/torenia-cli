@@ -1,0 +1,24 @@
+import React from 'react';
+import { Route } from 'react-router-dom';
+import { routerRedux } from 'dva/router';
+import { <%= history %> } from 'history';
+
+import renderRoutes from 'utils/renderRoutes';
+
+const { ConnectedRouter } = routerRedux;
+
+window.g_history = <%= history %>({
+  basename: window.routerBase
+});
+
+// routes start
+
+// routes end
+
+export default () => (
+  <ConnectedRouter history={window.g_history}>
+    <Route render={({ location }) =>
+      renderRoutes(routes, {}, { location })
+    } />
+  </ConnectedRouter>
+)

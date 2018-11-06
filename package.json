@@ -1,0 +1,25 @@
+{
+  "name": "torenia-cli",
+  "bin": {
+    "torenia": "bin/torenia.js"
+  },
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "管理内容脚手架"
+  ],
+  "author": "leemotive",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "fs-extra": "^7.0.0",
+    "inquirer": "^6.2.0",
+    "json5": "^2.1.0",
+    "walk": "^2.3.14",
+    "yargs": "^12.0.2"
+  }
+}
