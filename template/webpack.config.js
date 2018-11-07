@@ -1,10 +1,14 @@
 const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 
+const isProductionMode = process.env.NODE_ENV === 'production';
+const nameHash = isProductionMode ? '.[hash:8]' : '';
 
 module.exports = {
+  mode: isProductionMode ? 'production' : 'development',
   entry: {
     app: ['./src/index.js']
   },
@@ -42,7 +46,7 @@ module.exports = {
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
-            { loader: 'css-loader', options: { importLoaders: 1, modules: true, minimize: process.env.NODE_ENV === 'production' } },
+            { loader: 'css-loader', options: { importLoaders: 1, modules: true, minimize: isProductionMode } },
             {
               loader: 'postcss-loader', options: {
                 plugins: (loader) => [
@@ -72,7 +76,7 @@ module.exports = {
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
-            { loader: 'css-loader', options: { importLoaders: 1, minimize: process.env.NODE_ENV === 'production' } },
+            { loader: 'css-loader', options: { importLoaders: 1, minimize: isProductionMode } },
             {
               loader: 'postcss-loader', options: {
                 plugins: (loader) => [
@@ -111,18 +115,22 @@ module.exports = {
     },
   },
   output: {
-    filename: '[name].bundle.js',
+    filename: `[name].bundle${nameHash}.js`,
     path: path.resolve(__dirname, './dist'),
   },
   plugins: [
-    new ExtractTextPlugin('[name].bundle.css'),
+    new ExtractTextPlugin(`[name].bundle${nameHash}.css`),
     new webpack.DllReferencePlugin({
       manifest: require('./dist/vendor-manifest.json')
     }),
-    new CopyWebpackPlugin([
-      './src/index.html'
-    ]),
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, 'src/index.html'),
+    }),
+    new AddAssetHtmlPlugin({
+      filepath: path.resolve(__dirname, 'dist/*.dll.*.js'),
+      publicPath: '/'
+    }),
   ],
   devServer: {
     port: 8090,

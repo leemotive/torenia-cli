@@ -30,8 +30,13 @@ module.exports = () => {
           c.filePath = root;
           if (c.route === undefined) {
             let entry = c.entry || '';
-            if (entry && 'idnex.js' !== entry) {
-              entry = `/${path.basename(entry, '.js')}`;
+            if (entry) {
+              let basename = path.basename(entry, '.js');
+              if (basename !== 'index') {
+                entry = `/${basename}`;
+              } else {
+                entry = ''
+              }
             }
             c.route = `${c.filePath}${entry}`.replace(pageDir, '').replace(/\$id/g, ':id') || '/';
           }
@@ -61,7 +66,7 @@ module.exports = () => {
           return {
             path: `'${route}'`,
             exact: true,
-            component: `require('${filePath}/${entry || 'index.js'}').default`,
+            component: `require('${path.resolve(filePath, entry || 'index.js')}').default`,
           }
         })
       }
