@@ -1,6 +1,6 @@
 import React from 'react';
 import { LocaleProvider } from 'antd';
-import enUS from 'antd/lib/locale-provider/en_US';
+import enUS from 'antd/es/locale-provider/en_US';
 import { withRouter } from 'react-router-dom';
 import Layout from './layout';
 

@@ -1,8 +1,12 @@
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 
 const isProductionMode = process.env.NODE_ENV === 'production';
 const nameHash = isProductionMode ? '.[hash:8]' : '';
@@ -32,6 +36,7 @@ module.exports = {
               [require('babel-plugin-import'), {
                 libraryName: 'torenia', libraryDirectory: 'es', style: true
               }],
+              require('babel-plugin-react-require'),
               require('@babel/plugin-proposal-export-default-from'),
               require('@babel/plugin-proposal-class-properties'),
               require('@babel/plugin-proposal-nullish-coalescing-operator'),
@@ -43,10 +48,18 @@ module.exports = {
       {
         test: /\.(le|c)ss$/,
         include: path.resolve(__dirname, 'src'),
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
           use: [
-            { loader: 'css-loader', options: { importLoaders: 1, modules: true, minimize: isProductionMode } },
+          //{ loader: 'style-loader' },
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+              modules: true,
+              camelCase: true,
+              localIdentName: '[local]-[hash:10]',
+            }
+          },
             {
               loader: 'postcss-loader', options: {
                 plugins: (loader) => [
@@ -68,15 +81,13 @@ module.exports = {
             },
             { loader: 'less-loader', options: { javascriptEnabled: true } }
           ]
-        })
       },
       {
         test: /\.(le|c)ss$/,
         exclude: path.resolve(__dirname, 'src'),
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
           use: [
-            { loader: 'css-loader', options: { importLoaders: 1, minimize: isProductionMode } },
+          MiniCssExtractPlugin.loader,
+          { loader: 'css-loader', options: { importLoaders: 1 } },
             {
               loader: 'postcss-loader', options: {
                 plugins: (loader) => [
@@ -98,7 +109,6 @@ module.exports = {
             },
             { loader: 'less-loader', options: { javascriptEnabled: true } }
           ]
-        })
       },
       {
         test: /\.(png|jpg|gif|jpeg|eot|svg|ttf|woff)/,
@@ -110,27 +120,47 @@ module.exports = {
   },
   resolve: {
     alias: {
-      components: path.resolve(__dirname, "./src/components"),
-      utils: path.resolve(__dirname, "./src/utils"),
+      components: path.resolve(__dirname, './src/components'),
+      utils: path.resolve(__dirname, './src/utils'),
     },
   },
   output: {
     filename: `[name].bundle${nameHash}.js`,
     path: path.resolve(__dirname, './dist'),
+    publicPath: '/'
+  },
+  optimization: {
+    minimizer: [
+      new UglifyJsPlugin({
+        cache: true,
+        parallel: true,
+        sourceMap: true,
+      }),
+      new OptimizeCSSAssetsPlugin({})
+    ]
   },
   plugins: [
-    new ExtractTextPlugin(`[name].bundle${nameHash}.css`),
+    //new ExtractTextPlugin(`[name].bundle${nameHash}.css`),
     new webpack.DllReferencePlugin({
       manifest: require('./dist/vendor-manifest.json')
     }),
     new webpack.HotModuleReplacementPlugin(),
+    new MiniCssExtractPlugin({
+      filename: `[name].bundle${nameHash}.css`,
+      chunkFilename: `[id]${nameHash}.css`
+    }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'src/index.html'),
     }),
     new AddAssetHtmlPlugin({
-      filepath: path.resolve(__dirname, 'dist/*.dll.*.js'),
+      filepath: path.resolve(__dirname, 'dist/*.dll*.js'),
       publicPath: '/'
     }),
+    new webpack.ContextReplacementPlugin(
+      /moment[/\\]locale$/,
+      /zh-cn/,
+    ),
+    ...[process.env.ANALYZE === 1 ? new BundleAnalyzerPlugin() : undefined].filter(_ => _),
   ],
   devServer: {
     port: 8090,

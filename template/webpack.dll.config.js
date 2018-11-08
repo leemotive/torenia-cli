@@ -1,8 +1,11 @@
 const path = require('path');
 const webpack = require('webpack');
 
+const isProductionMode = process.env.NODE_ENV === 'production';
+const nameHash = isProductionMode ? '.[hash:8]' : '';
+
 module.exports = {
-  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+  mode: isProductionMode ? 'production' : 'development',
   entry: {
     vendor: [
       'react',
@@ -14,7 +17,7 @@ module.exports = {
     ]
   },
   output: {
-    filename: '[name].dll.js',
+    filename: `[name].dll${nameHash}.js`,
     path: path.resolve(__dirname, 'dist'),
     library: '[name]'
   },
