@@ -25,7 +25,7 @@ module.exports = () => {
       if (configArr && !Array.isArray(configArr)) {
         configArr = [ configArr ];
       }
-      configArr.forEach(c => {
+      configArr && configArr.forEach(c => {
         if (c) {
           c.filePath = root;
           if (c.route === undefined) {

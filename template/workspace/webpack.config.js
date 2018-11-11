@@ -163,7 +163,7 @@ module.exports = {
     ...[process.env.ANALYZE === 1 ? new BundleAnalyzerPlugin() : undefined].filter(_ => _),
   ],
   devServer: {
-    port: 8090,
+    port: 8088,
     contentBase: [path.resolve(__dirname, 'dist'), path.resolve(__dirname, 'public')],
     proxy: {
       '/': {

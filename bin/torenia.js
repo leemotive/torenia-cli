@@ -8,6 +8,7 @@ const colors = require('colors');
 
 const create = require('../command/create');
 const compile = require('../command/compile');
+const page = require('../command/page');
 
 yargs.command('create <name>', 'initialize project', yargs => {
   return yargs.option('force', {
@@ -43,6 +44,10 @@ yargs.command('create <name>', 'initialize project', yargs => {
 
 yargs.command('compile', 'generate model, menu route', yargs => yargs, argv => {
   compile();
+});
+
+yargs.command('page', 'generate a page module', yargs => yargs, argv => {
+  page();
 })
 
 yargs.argv;

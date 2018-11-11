@@ -6,9 +6,10 @@ class Page extends Component {
   }
 
   render() {
+    const { inner, children, ...otherProps } = this.props;
     return (
-      <div { ...this.props } >
-        { this.props.children }
+      <div { ...otherProps } >
+        { children }
       </div>
     )
   }

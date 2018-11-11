@@ -6,7 +6,7 @@ const ejs = require('ejs');
 const colors = require('colors');
 
 const cwd = process.cwd();
-const templateRoot = path.resolve(__dirname, '../template');
+const templateRoot = path.resolve(__dirname, '../template/workspace');
 
 module.exports = function (data) {
 
@@ -30,7 +30,7 @@ module.exports = function (data) {
   spin();
 
 
-  const walker = walk.walk(path.resolve(templateRoot));
+  const walker = walk.walk(templateRoot);
   walker.on('file', (root, fileStats, next) => {
     const filename = fileStats.name;
     const newRoot = root.replace(templateRoot, projectRoot);
