@@ -6,8 +6,8 @@ const path = require('path');
 const fse = require('fs-extra');
 
 const cwd = process.cwd();
-const srcDir = `${cwd}/src`;
-const pageDir = `${srcDir}/pages`;
+const srcDir = path.resolve(cwd, 'src');
+const pageDir = path.resolve(srcDir, 'pages');
 
 
 module.exports = () => {
@@ -33,12 +33,12 @@ module.exports = () => {
             if (entry) {
               let basename = path.basename(entry, '.js');
               if (basename !== 'index') {
-                entry = `/${basename}`;
+                entry = basename;
               } else {
                 entry = ''
               }
             }
-            c.route = `${c.filePath}${entry}`.replace(pageDir, '').replace(/\$id/g, ':id') || '/';
+            c.route =  path.resolve(c.filePath, entry).replace(pageDir, '').split(path.sep).join('/').replace(/\$id/g, ':id') || '/';
           }
           if (c.menu === undefined) {
             c.menu = c.route || `/${pkg.name}`;
@@ -47,8 +47,8 @@ module.exports = () => {
           configs.push(c);
         }
       })
-    } else if ('model.js' === name || root.endsWith('/models') && path.extname(name) === '.js') {
-      models.push(`  require('${fullname}').default,`)
+    } else if ('model.js' === name || root.endsWith(`${path.sep}models`) && path.extname(name) === '.js') {
+      models.push(`  require(${JSON5.stringify(fullname, { quote: '\'' })}).default,`)
     }
 
     next();
@@ -60,7 +60,7 @@ module.exports = () => {
     const routes = [
       {
         path: `'/'`,
-        component: `require('${srcDir}/layouts/index.js').default`,
+        component: `require('${path.resolve(srcDir, 'layouts/index.js')}').default`,
         routes: configs.filter(r => r && r.route).map(config => {
           const { filePath, route, entry } = config;
           return {
@@ -76,7 +76,7 @@ module.exports = () => {
       quote: ' ',
       space: 2,
     }).replace(/(: ) /g, '$1').replace(/ ,/g, ',');
-    const routesFile = `${srcDir}/.torenia/router.js`;
+    const routesFile = path.resolve(srcDir, '.torenia/router.js');
     fse.outputFileSync(routesFile, `export default ${routesString};\n`, {
       encoding: 'utf8'
     });
@@ -100,7 +100,7 @@ module.exports = () => {
       quote: '\'',
       space: 2,
     });
-    const configFile = `${srcDir}/.torenia/menu.js`;
+    const configFile = path.resolve(srcDir, '.torenia/menu.js');
     fse.outputFileSync(configFile, `export default ${menuString};\n`, {
       encoding: 'utf8'
     });
@@ -108,7 +108,7 @@ module.exports = () => {
 
     // model生成
     const modelsString = models.join('\n');
-    const containerFile = `${srcDir}/.torenia/models.js`;
+    const containerFile = path.resolve(srcDir, '.torenia/models.js');
     fs.writeFileSync(containerFile, `export default [\n${modelsString}\n];\n`, {
       encoding: 'utf8'
     });
