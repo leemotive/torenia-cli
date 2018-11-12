@@ -5,12 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "NODE_ENV=development webpack",
-    "build": "NODE_ENV=production webpack",
-    "dll:dev": "NODE_ENV=development webpack --config webpack.dll.config.js",
-    "dll:prd": "NODE_ENV=production webpack --config webpack.dll.config.js",
-    "start": "NODE_ENV=development webpack-dev-server",
-    "analyze": "NODE_ENV=development ANALYZE=1 webpack"
+    "dev": "cross-env NODE_ENV=development webpack",
+    "build": "cross-env NODE_ENV=production webpack",
+    "dll:dev": "cross-env NODE_ENV=development webpack --config webpack.dll.config.js",
+    "dll:prd": "cross-env NODE_ENV=production webpack --config webpack.dll.config.js",
+    "start": "cross-env NODE_ENV=development webpack-dev-server",
+    "analyze": "cross-env NODE_ENV=development ANALYZE=1 webpack"
   },
   "author": "",
   "license": "ISC",
@@ -25,7 +25,7 @@
     "react-authority": "^1.0.4",
     "react-dom": "^16.6.0",
     "react-helmet": "^5.2.0",
-    "torenia": "^1.0.0-alpha.0"
+    "torenia": "^1.0.0-alpha.2"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
@@ -40,6 +40,7 @@
     "babel-plugin-import": "^1.11.0",
     "babel-plugin-react-require": "^3.0.1",
     "copy-webpack-plugin": "^4.6.0",
+    "cross-env": "^5.2.0",
     "css-loader": "^1.0.1",
     "file-loader": "^2.0.0",
     "html-webpack-plugin": "^3.2.0",
