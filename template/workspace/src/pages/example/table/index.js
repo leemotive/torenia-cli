@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import Page from 'components/page';
+import { Table } from 'torenia';
 
 import column from './components/column';
 
@@ -11,7 +12,7 @@ class TableList extends Component {
   render() {
     return (
       <Page>
-        <TableList
+        <Table
           resource="list"
           name="demolist"
           columns={column()}

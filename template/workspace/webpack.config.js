@@ -21,7 +21,7 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        include: [path.resolve(__dirname, 'src'), /node_modules\/torenia/],
+        include: [path.resolve(__dirname, 'src'), path.resolve(__dirname, 'node_modules/torenia')],
         use: {
           loader: 'babel-loader',
           options: {
