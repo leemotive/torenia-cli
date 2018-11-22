@@ -41,7 +41,7 @@ module.exports = {
               require('@babel/plugin-proposal-class-properties'),
               require('@babel/plugin-proposal-nullish-coalescing-operator'),
               require('@babel/plugin-proposal-optional-chaining'),
-              require('@babel/plugin-proposal-pipeline-operator'),
+              [require('@babel/plugin-proposal-pipeline-operator'), { proposal: 'minimal' }],
             ]
           }
         }
@@ -164,11 +164,11 @@ module.exports = {
     ...[process.env.ANALYZE === 1 ? new BundleAnalyzerPlugin() : undefined].filter(_ => _),
   ],
   devServer: {
-    port: 8088,
+    port: 9027,
     contentBase: [path.resolve(__dirname, 'dist'), path.resolve(__dirname, 'public')],
     proxy: {
       '/': {
-        target: 'http://localhost:8091',
+        target: 'http://localhost:9028',
         bypass: (req) => {
           if (!req.url.startsWith('/api')) {
             if (/\.[a-z]+$/.test(req.url)) {

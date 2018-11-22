@@ -1,0 +1,16 @@
+.forgotpassword {
+  width: 600px;
+  margin: 100px auto;
+}
+
+.validateInfoForm,
+.resetPasswordForm {
+  width: 240px;
+  margin: 50px auto;
+
+  :global {
+    .form-submit-btn {
+      width: 100%;
+    }
+  }
+}

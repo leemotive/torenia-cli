@@ -5,8 +5,9 @@ export default {
   name: '用户中心',
   menu,
   menuSort: [
-    'example',
+    'overview', 'example',
   ],
-  emptyLayoutPages: ['/login'],
+  noPerssmisionPages: ['/login', '/forgotpassword', '/register', '/notfound', '/forbidden', '/error'],
+  emptyLayoutPages: ['/login', '/forgotpassword', '/register'],
   apiPrefix: '/api'
 }

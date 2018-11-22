@@ -1,6 +1,6 @@
 import clonedeep from 'lodash.clonedeep';
 
-export function arrayToTree (arr, id = 'id', pid = 'pid', children = 'children') {
+export function arrayToTree (arr, id = 'id', pid = 'pid', children = 'children', callback) {
   const data = clonedeep(arr);
   const map = new Map();
   const res = [];
@@ -9,6 +9,10 @@ export function arrayToTree (arr, id = 'id', pid = 'pid', children = 'children')
     let itemInMap = map.get(item[id]);
     let newItem = { ...itemInMap, ...item };
     map.set(item[id], newItem);
+
+    if (typeof callback === 'function' && !callback(item)) {
+      continue;
+    }
 
     if (!newItem[pid]) {
       res.push(newItem);

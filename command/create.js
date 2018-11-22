@@ -42,7 +42,7 @@ module.exports = function (data) {
       targetFile = targetFile.replace('.ejs', '');
       ejs.renderFile(sourceFile, data, {}, write);
     } else {
-      fs.readFile(sourceFile, 'utf8', write);
+      fse.copy(sourceFile, targetFile);
     }
 
 

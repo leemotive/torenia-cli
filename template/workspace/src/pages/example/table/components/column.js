@@ -1,3 +1,6 @@
+import { Utils } from 'torenia';
+const { render } = Utils;
+
 export default () => {
   return [
     {
@@ -7,6 +10,7 @@ export default () => {
     {
       title: '性别',
       dataIndex: 'gender',
+      render: render.tag('gender'),
     },
     {
       title: '年龄',

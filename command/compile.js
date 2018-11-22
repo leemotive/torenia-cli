@@ -83,13 +83,14 @@ module.exports = () => {
 
 
     // 菜单生成
-    const menuConfigs = configs.filter(c => c && c.menu);
+    const menuConfigs = configs.filter(c => c);
     const menus = menuConfigs.map(m => {
       const route = m.menu || m.route;
       const key = (m.key == undefined ? route : m.key).replace(/^\//, '');
       return {
         key,
         pKey: m.pKey || '',
+        menu: m.menu,
         route,
         title: m.title || m.pkgName,
         icon: m.icon || 'appstore',

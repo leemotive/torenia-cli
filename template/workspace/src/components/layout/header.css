@@ -13,6 +13,7 @@
   :global {
     .anticon-user {
       font-size: 14px !important;
+      margin-right: 5px;
     }
   }
 }

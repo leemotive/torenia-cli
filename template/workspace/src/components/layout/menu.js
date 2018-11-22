@@ -14,7 +14,7 @@ menu.forEach(m => menuMap[m.key] = m);
 class Menu extends Component {
   constructor(props) {
     super(props);
-    this.menuTree = arrayToTree(menu, 'key', 'pKey', 'children');
+    this.menuTree = arrayToTree(menu, 'key', 'pKey', 'children', m => m.menu);
     this.state = {
       openedKeys: Menu.getOpenedKeys(props),
       collapsed: props.collapsed,
