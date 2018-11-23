@@ -1,7 +1,8 @@
 {
   "name": "register",
   "torenia": {
-    "title": "注册"
+    "title": "注册",
+    "menu": false
   },
   "version": "1.0.0",
   "description": "",
