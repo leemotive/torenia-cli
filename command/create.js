@@ -1,5 +1,5 @@
 const path = require('path');
-const walk = require('walk');
+const Walker = require('walker');
 const fs = require('fs');
 const fse = require('fs-extra');
 const ejs = require('ejs');
@@ -30,15 +30,14 @@ module.exports = function (data) {
   spin();
 
 
-  const walker = walk.walk(templateRoot);
-  walker.on('file', (root, fileStats, next) => {
-    const filename = fileStats.name;
-    const newRoot = root.replace(templateRoot, projectRoot);
+  const walker = Walker(templateRoot);
+  walker.filterDir(dir => !dir.includes('node_modules'))
+  walker.on('file', file => {
 
-    const sourceFile = path.resolve(root, filename);
-    let targetFile = path.resolve(newRoot, filename);
+    let targetFile = file.replace(templateRoot, projectRoot);
+    const sourceFile = file;
 
-    if (filename.endsWith('.ejs')) {
+    if (sourceFile.endsWith('.ejs')) {
       targetFile = targetFile.replace('.ejs', '');
       ejs.renderFile(sourceFile, data, {}, write);
     } else {
@@ -48,29 +47,28 @@ module.exports = function (data) {
 
     function write (err, content) {
       if (err) {
+        console.log(err);
         hasRejected = true;
         return;
       }
       fs.writeFile(targetFile, content, 'utf8', err => {
         if (err) {
+          console.log(err);
           hasRejected = true;
           return;
         }
       });
     }
 
-    hasRejected || next();
   });
 
-  walker.on('directory', (root, fileStats, next) => {
-    const filename = fileStats.name;
-    const newRoot = root.replace(templateRoot, projectRoot);
+  walker.on('dir', dir => {
+    const newDir = dir.replace(templateRoot, projectRoot);
     try {
-      fse.ensureDirSync(path.resolve(newRoot, filename));
+      fse.ensureDirSync(newDir);
     } catch(e) {
       hasRejected = true;
     }
-    hasRejected || next();
   });
 
   walker.on('end', () => {

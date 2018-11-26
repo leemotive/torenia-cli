@@ -1,6 +1,4 @@
-import {
-  register
-} from '../services';
+import { register } from '../services';
 import { routerRedux } from 'dva/router';
 import { isSuccess } from 'utils/request';
 
@@ -13,11 +11,11 @@ export default {
         const { pathname } = location;
         if ('/register' === pathname) {
           dispatch({
-            type: 'init'
+            type: 'init',
           });
         }
-      })
-    }
+      });
+    },
   },
 
   state: {
@@ -26,10 +24,10 @@ export default {
 
   effects: {
     *register({ payload }, { put, call }) {
-      const res = yield call(register, payload)
+      const res = yield call(register, payload);
       if (isSuccess(res)) {
         yield put({
-          type: 'success'
+          type: 'success',
         });
 
         yield new Promise(resolve => {
@@ -37,7 +35,7 @@ export default {
         });
         yield put(routerRedux.push('/login'));
       }
-    }
+    },
   },
 
   reducers: {
@@ -46,7 +44,6 @@ export default {
     },
     init(state) {
       return { ...state, success: false };
-    }
-  }
-
-}
+    },
+  },
+};

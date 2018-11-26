@@ -3,7 +3,6 @@ import config from 'utils/config';
 
 export function currentUser() {
   return request({
-    url: `${config.apiPrefix}/session`
+    url: `${config.apiPrefix}/session`,
   });
 }
-

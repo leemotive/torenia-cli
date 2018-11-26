@@ -12,13 +12,9 @@ class TableList extends Component {
   render() {
     return (
       <Page>
-        <Table
-          resource="list"
-          name="demolist"
-          columns={column()}
-        />
+        <Table resource="list" name="demolist" columns={column()} />
       </Page>
-    )
+    );
   }
 }
 

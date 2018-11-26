@@ -1,16 +1,9 @@
 export default {
   namespace: 'overview',
 
-  state: {
+  state: {},
 
-  },
+  effects: {},
 
-  effects: {
-
-  },
-
-  reducers: {
-
-  },
-
-}
+  reducers: {},
+};

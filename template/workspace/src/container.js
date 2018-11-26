@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import dva from 'dva';
 import createLoading from 'dva-loading';
 import models from './.torenia/models';
@@ -13,7 +13,7 @@ app.use(createLoading());
 
 models.forEach(model => {
   app.model(model);
-})
+});
 
 class Container extends Component {
   render() {
@@ -23,4 +23,3 @@ class Container extends Component {
 }
 
 export default Container;
-

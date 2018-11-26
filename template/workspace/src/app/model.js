@@ -1,6 +1,4 @@
-import {
-  currentUser,
-} from './service';
+import { currentUser } from './service';
 import { isSuccess } from 'utils/request';
 import config from 'utils/config';
 
@@ -19,11 +17,11 @@ export default {
         const { pathname } = location;
         if (!type && !noPerssmisionPages.includes(pathname)) {
           dispatch({
-            type: 'currentUserInfo'
-          })
+            type: 'currentUserInfo',
+          });
         }
-      })
-    }
+      });
+    },
   },
   effects: {
     *currentUserInfo(_, { call, put }) {
@@ -32,15 +30,15 @@ export default {
         yield put({
           type: 'putUserInfo',
           payload: {
-            userInfo: res.data
-          }
-        })
+            userInfo: res.data,
+          },
+        });
       }
     },
   },
   reducers: {
     putUserInfo(state, { payload }) {
       return { ...state, ...payload };
-    }
-  }
-}
+    },
+  },
+};

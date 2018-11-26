@@ -1,5 +1,5 @@
 
-const walk = require('walk');
+const Walker = require('walker');
 const fs = require('fs');
 const JSON5 = require('json5');
 const path = require('path');
@@ -12,22 +12,22 @@ const pageDir = path.resolve(srcDir, 'pages');
 
 module.exports = () => {
 
-  const walker = walk.walk(srcDir);
+  const walker = Walker(srcDir);
 
   const configs = [];
   const models = [];
-  walker.on('file', (root, fileStats, next) => {
-    const { name } = fileStats;
-    const fullname = path.resolve(root, name);
+  walker.on('file', file => {
+    const name = path.basename(file);
+    const fileDirPath = path.dirname(file);
     if ('package.json' === name) {
-      const pkg = require(fullname);
+      const pkg = require(file);
       let { torenia: configArr } = pkg;
       if (configArr && !Array.isArray(configArr)) {
         configArr = [ configArr ];
       }
       configArr && configArr.forEach(c => {
         if (c) {
-          c.filePath = root;
+          c.filePath = fileDirPath;
           if (c.route === undefined) {
             let entry = c.entry || '';
             if (entry) {
@@ -38,7 +38,7 @@ module.exports = () => {
                 entry = ''
               }
             }
-            c.route =  path.resolve(c.filePath, entry).replace(pageDir, '').split(path.sep).join('/').replace(/\$id/g, ':id') || '/';
+            c.route =  path.resolve(fileDirPath, entry).replace(pageDir, '').split(path.sep).join('/').replace(/\$id/g, ':id') || '/';
           }
           if (c.menu === undefined) {
             c.menu = c.route || `/${pkg.name}`;
@@ -47,11 +47,9 @@ module.exports = () => {
           configs.push(c);
         }
       })
-    } else if ('model.js' === name || root.endsWith(`${path.sep}models`) && path.extname(name) === '.js') {
-      models.push(`  require(${JSON5.stringify(fullname, { quote: '\'' })}).default,`)
+    } else if ('model.js' === name || fileDirPath.endsWith(`${path.sep}models`) && path.extname(name) === '.js') {
+      models.push(`  require(${JSON5.stringify(file, { quote: '\'' })}).default,`)
     }
-
-    next();
   });
 
   walker.on('end', () => {

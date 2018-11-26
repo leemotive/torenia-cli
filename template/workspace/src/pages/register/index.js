@@ -8,7 +8,7 @@ import styles from './index.css';
 
 class Register extends Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
 
   get registerFormConfig() {
@@ -18,7 +18,11 @@ class Register extends Component {
         { name: 'phone', placeholder: '手机号', widget: 'SmsCode' },
         { name: 'smsCode', placeholder: '短信验证码' },
         { name: 'password', placeholder: '密码', widget: 'Password' },
-        { name: 'confirmPassword', placeholder: '确认密码', widget: 'Password' },
+        {
+          name: 'confirmPassword',
+          placeholder: '确认密码',
+          widget: 'Password',
+        },
       ],
       className: styles.registerForm,
       opProps: {
@@ -29,24 +33,28 @@ class Register extends Component {
       onSubmit(values) {
         dispatch({
           type: 'register/register',
-          payload: values
+          payload: values,
         });
-      }
-    }
+      },
+    };
   }
 
   render() {
-    const { register: { success } } = this.props;
+    const {
+      register: { success },
+    } = this.props;
     return (
       <Page>
         {success ? (
           <div style={{ textAlign: 'center', marginTop: 50 }}>
             注册成功，请前往登录页<Link to="/login">登录</Link>
           </div>
-        ) : <Form { ...this.registerFormConfig } />}
+        ) : (
+          <Form {...this.registerFormConfig} />
+        )}
       </Page>
-    )
+    );
   }
 }
 
-export default connect(({ register }) => ({ register }))(Register)
+export default connect(({ register }) => ({ register }))(Register);

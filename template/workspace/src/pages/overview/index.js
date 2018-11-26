@@ -9,13 +9,8 @@ class Overview extends Component {
   }
 
   render() {
-    return (
-      <Page>
-        概览页面
-      </Page>
-    )
+    return <Page>概览页面</Page>;
   }
 }
-
 
 export default connect(({ overview }) => ({ overview }))(Overview);

@@ -1,7 +1,4 @@
-import {
-  validateInfo,
-  resetPassword,
-} from '../services';
+import { validateInfo, resetPassword } from '../services';
 import { isSuccess } from 'utils/request';
 
 export default {
@@ -18,31 +15,35 @@ export default {
         payload,
       });
       const res = yield call(validateInfo, payload);
-      if(isSuccess(res)) {
+      if (isSuccess(res)) {
         yield put({
-          type: 'nextStep'
+          type: 'nextStep',
         });
       }
     },
     *resetPassword({ payload }, { call, put, select }) {
-      const forgotpassword = yield select(({ forgotpassword }) => ({ forgotpassword }));
-      const res = yield call(resetPassword, { ...payload, phone: forgotpassword.phone });
+      const forgotpassword = yield select(({ forgotpassword }) => ({
+        forgotpassword,
+      }));
+      const res = yield call(resetPassword, {
+        ...payload,
+        phone: forgotpassword.phone,
+      });
       if (isSuccess(res)) {
         yield put({
-          type: 'nextStep'
+          type: 'nextStep',
         });
       }
-    }
+    },
   },
 
   reducers: {
     putPhone(state, { payload }) {
-      return { ...state, ...payload }
+      return { ...state, ...payload };
     },
     nextStep(state) {
       const { current } = state;
       return { ...state, current: current + 1 };
-    }
+    },
   },
-
-}
+};

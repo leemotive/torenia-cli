@@ -1,9 +1,9 @@
-const Mock = require('mockjs')
+const Mock = require('mockjs');
 
 exports.handle = router => {
   router.get('/captcha', ctx => {
     ctx.body = {
-      url: Mock.Random.image()
-    }
-  })
-}
+      url: Mock.Random.image(),
+    };
+  });
+};

@@ -18,7 +18,7 @@ class Notice extends Component {
           </Badge>
         </Link>
       </span>
-    )
+    );
   }
 }
 

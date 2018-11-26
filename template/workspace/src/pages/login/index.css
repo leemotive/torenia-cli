@@ -2,9 +2,6 @@
   background: url('./assets/bg.jpg');
   background-position: 50% 50%;
   height: 100vh;
-
-
-
 }
 
 .form-wrapper {
@@ -16,6 +13,7 @@
   transform: translate(-50%, -50%);
   padding: 20px;
   box-shadow: 0 0 20px #000;
+
 
 
   :global {

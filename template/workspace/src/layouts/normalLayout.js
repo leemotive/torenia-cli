@@ -17,9 +17,19 @@ class NormalLayout extends Component {
       <div>
         <Layout>
           <Sider {...props} />
-          <Layout id="scrollContainer" style={{ height: '100vh', overflow: 'auto' }}>
+          <Layout
+            id="scrollContainer"
+            style={{ height: '100vh', overflow: 'auto' }}
+          >
             <Header />
-            <Content style={{ margin: '15px 15px 0', padding: '15px 15px 0', background: '#fff', minHeight: 'auto' }}>
+            <Content
+              style={{
+                margin: '15px 15px 0',
+                padding: '15px 15px 0',
+                background: '#fff',
+                minHeight: 'auto',
+              }}
+            >
               {children}
             </Content>
             <Footer />
@@ -27,7 +37,7 @@ class NormalLayout extends Component {
           <BackTop target={() => document.getElementById('scrollContainer')} />
         </Layout>
       </div>
-    )
+    );
   }
 }
 

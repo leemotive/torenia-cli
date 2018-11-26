@@ -12,11 +12,9 @@
         color: #1890ff;
       }
     }
-
   }
 
   :global {
-
     .ant-badge-count {
       top: -15px;
       right: -5px;

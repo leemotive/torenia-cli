@@ -17,35 +17,43 @@ class Login extends Component {
     return {
       fields: [
         { name: 'username', prefix: <Icon type="user" /> },
-        { name: 'password', widget: 'Password', prefix: <Icon type="safety" />  }
+        {
+          name: 'password',
+          widget: 'Password',
+          prefix: <Icon type="safety" />,
+        },
       ],
       submitText: '登录',
       opProps: {
-        wrapperCol: { offset: 0 }
+        wrapperCol: { offset: 0 },
       },
       onSubmit(values) {
         dispatch({
           type: 'session/login',
-          payload: values
+          payload: values,
         });
-      }
-    }
+      },
+    };
   }
 
   render() {
     return (
       <Page className={styles.background}>
         <div className={styles.formWrapper}>
-          <Form { ...this.formOption }>
+          <Form {...this.formOption}>
             submit
             <Row type="flex">
-              <Col style={{flex: 1}}><Link to="/forgotpassword">忘记密码</Link></Col>
-              <Col style={{flex: 1, textAlign: 'right'}}><Link to="/register">没有账户</Link></Col>
+              <Col style={{ flex: 1 }}>
+                <Link to="/forgotpassword">忘记密码</Link>
+              </Col>
+              <Col style={{ flex: 1, textAlign: 'right' }}>
+                <Link to="/register">没有账户</Link>
+              </Col>
             </Row>
           </Form>
         </div>
       </Page>
-    )
+    );
   }
 }
 

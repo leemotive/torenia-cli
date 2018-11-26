@@ -1,11 +1,7 @@
 import React from 'react';
 import { Switch, Route as DefaultRoute, Redirect } from 'react-router-dom';
 
-const renderRoutes = (
-  routes,
-  extraProps = {},
-  switchProps = {}
-) => {
+const renderRoutes = (routes, extraProps = {}, switchProps = {}) => {
   if (!routes) {
     return null;
   }
@@ -22,7 +18,7 @@ const renderRoutes = (
               exact={route.exact}
               strict={route.strict}
             />
-          )
+          );
         }
 
         const Route = route.Route || DefaultRoute;
@@ -33,28 +29,26 @@ const renderRoutes = (
             exact={route.exact}
             strict={route.strict}
             render={props => {
-              const childRoutes = renderRoutes(route.routes, {}, { location: props.location });
+              const childRoutes = renderRoutes(
+                route.routes,
+                {},
+                { location: props.location },
+              );
               if (route.component) {
                 return (
-                  <route.component
-                    {...props}
-                    {...extraProps}
-                    route={route}
-                  >
+                  <route.component {...props} {...extraProps} route={route}>
                     {childRoutes}
                   </route.component>
-                )
+                );
               } else {
                 return childRoutes;
               }
             }}
           />
-        )
+        );
       })}
     </Switch>
-  )
+  );
 };
 
 export default renderRoutes;
-
-

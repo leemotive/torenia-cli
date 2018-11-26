@@ -27,6 +27,6 @@ export default () => {
     {
       title: '手机号',
       dataIndex: 'phone',
-    }
-  ]
-}
+    },
+  ];
+};

@@ -4,14 +4,12 @@ const users = [
 ];
 
 exports.handle = router => {
-
   router.post('/session', ctx => {
     const { username, password } = ctx.request.body;
 
     const loginsuccess = users.some(user => {
       return user.username === username && user.password === password;
     });
-
 
     loginsuccess && (ctx.session.username = username);
 
@@ -20,7 +18,7 @@ exports.handle = router => {
       msg: loginsuccess ? '登录成功' : '登录失败，用户名或密码错误',
       data: {
         username,
-      }
+      },
     };
     ctx.responseInterceptor = _ => _;
   });
@@ -38,8 +36,8 @@ exports.handle = router => {
       ctx.status = 401;
     } else {
       ctx.body = {
-        username
-      }
+        username,
+      };
     }
   });
-}
+};

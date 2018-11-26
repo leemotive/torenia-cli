@@ -7,9 +7,7 @@ import Layout from './layout';
 export default withRouter(props => {
   return (
     <LocaleProvider locale={enUS}>
-      <Layout>
-        { props.children }
-      </Layout>
+      <Layout>{props.children}</Layout>
     </LocaleProvider>
-  )
-})
+  );
+});

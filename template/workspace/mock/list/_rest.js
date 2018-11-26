@@ -7,8 +7,7 @@ exports.mock = {
       age: '@integer(1, 150)',
       email: '@email',
       phone: /1[34578]\d{9}/,
-      address: '@county(true)'
-
-    }
-  ]
-}
+      address: '@county(true)',
+    },
+  ],
+};

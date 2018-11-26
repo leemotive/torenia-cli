@@ -7,11 +7,7 @@ class Page extends Component {
 
   render() {
     const { inner, children, ...otherProps } = this.props;
-    return (
-      <div { ...otherProps } >
-        { children }
-      </div>
-    )
+    return <div {...otherProps}>{children}</div>;
   }
 }
 

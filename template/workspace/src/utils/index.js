@@ -1,6 +1,12 @@
 import clonedeep from 'lodash.clonedeep';
 
-export function arrayToTree (arr, id = 'id', pid = 'pid', children = 'children', callback) {
+export function arrayToTree(
+  arr,
+  id = 'id',
+  pid = 'pid',
+  children = 'children',
+  callback,
+) {
   const data = clonedeep(arr);
   const map = new Map();
   const res = [];

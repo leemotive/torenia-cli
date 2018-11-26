@@ -1,28 +1,22 @@
-import {
-  login,
-  logout,
-  currentUser,
-} from '../services';
+import { login, logout } from '../services';
 import { routerRedux } from 'dva/router';
 import { isSuccess } from 'utils/request';
 
 export default {
   namespace: 'session',
 
-  state: {
-
-  },
+  state: {},
 
   effects: {
-    *login({payload}, { call, put }) {
+    *login({ payload }, { call, put }) {
       const res = yield call(login, payload);
       if (isSuccess(res)) {
         yield put({
           type: 'app/putUserInfo',
           payload: {
-            userInfo: res.data
-          }
-        })
+            userInfo: res.data,
+          },
+        });
         yield put(routerRedux.push('/overview'));
       }
     },
@@ -31,10 +25,8 @@ export default {
       if (isSuccess(res)) {
         yield put(routerRedux.push('/login'));
       }
-    }
+    },
   },
 
-  reducers: {
-
-  }
-}
+  reducers: {},
+};

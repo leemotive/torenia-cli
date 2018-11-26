@@ -13,7 +13,7 @@ class Footer extends Component {
       <AntFooter style={{ textAlign: 'center', padding: '15px' }}>
         大用户中心系统
       </AntFooter>
-    )
+    );
   }
 }
 

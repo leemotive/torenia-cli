@@ -3,8 +3,5 @@ import 'utils/dictionary';
 
 Table.config({
   apiPrefix: '/api',
-  globalDataPreProcess: data => data.data
+  globalDataPreProcess: data => data.data,
 });
-
-
-

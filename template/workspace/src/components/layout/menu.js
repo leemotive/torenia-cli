@@ -1,6 +1,6 @@
-import { Menu as AntMenu, Icon, Switch } from 'antd';
+import { Menu as AntMenu, Icon } from 'antd';
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import { connect } from 'dva';
 import { withRouter } from 'dva/router';
 import config from 'utils/config';
@@ -9,7 +9,7 @@ import ReactAuthority from 'react-authority';
 
 const { menu, menuSort } = config;
 const menuMap = {};
-menu.forEach(m => menuMap[m.key] = m);
+menu.forEach(m => (menuMap[m.key] = m));
 
 class Menu extends Component {
   constructor(props) {
@@ -18,7 +18,7 @@ class Menu extends Component {
     this.state = {
       openedKeys: Menu.getOpenedKeys(props),
       collapsed: props.collapsed,
-      defaultSelectedKeys: [Menu.getCurrentKey(this.props)]
+      defaultSelectedKeys: [Menu.getCurrentKey(this.props)],
     };
   }
 
@@ -46,21 +46,21 @@ class Menu extends Component {
     const openedKeys = [];
 
     let pKey = menuMap[currentKey]?.pKey;
-    while(pKey) {
+    while (pKey) {
       openedKeys.push(pKey);
       pKey = menuMap[pKey]?.pKey;
     }
     return openedKeys;
   }
 
-  handleOpenChange = (keys) => {
+  handleOpenChange = keys => {
     const { openedKeys = [] } = this.state;
     if (keys.length < openedKeys.length) {
       this.setState({ openedKeys: keys });
     } else {
       const oldSet = new Set(openedKeys);
       let addKey = '';
-      for(let k of keys) {
+      for (let k of keys) {
         if (!oldSet.has(k)) {
           addKey = k;
           break;
@@ -72,14 +72,15 @@ class Menu extends Component {
         return k === addKey || menuMap[k].pKey !== addPKey;
       });
       this.setState({
-        openedKeys: newOpenedKeys
+        openedKeys: newOpenedKeys,
       });
     }
+  };
 
-  }
-
-  renderMenu([...menus ]) {
-    const { app: { permissions = [] } } = this.props;
+  renderMenu([...menus]) {
+    const {
+      app: { permissions = [] },
+    } = this.props;
     menus.sort((a, b) => {
       let first = menuSort.find(m => m === a.key || m === b.key);
       return !first || first === a.key ? -1 : 1;
@@ -91,7 +92,10 @@ class Menu extends Component {
             <AntMenu.SubMenu
               key={m.key}
               title={
-                <span><Icon type={m.icon} /><span>{m.title}</span></span>
+                <span>
+                  <Icon type={m.icon} />
+                  <span>{m.title}</span>
+                </span>
               }
             >
               {this.renderMenu(m.children)}
@@ -126,16 +130,16 @@ class Menu extends Component {
           mode={collapsed ? 'vertical' : 'inline'}
           inlineCollapsed={collapsed}
           defaultSelectedKeys={defaultSelectedKeys}
-          { ...openKeyProps }
+          {...openKeyProps}
           onOpenChange={this.handleOpenChange}
         >
-          { this.renderMenu(this.menuTree) }
+          {this.renderMenu(this.menuTree)}
         </AntMenu>
       </div>
-    )
-
+    );
   }
 }
 
-
-export default withRouter(connect(({ app, loading }) => ({ app, loading }))(Menu))
+export default withRouter(
+  connect(({ app, loading }) => ({ app, loading }))(Menu),
+);

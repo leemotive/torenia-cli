@@ -20,21 +20,23 @@ class Header extends Component {
         type: 'session/logout',
       });
     }
-  }
+  };
 
   render() {
     const { app } = this.props;
 
     return (
       <AntHeader style={{ background: '#fff', padding: 0, display: 'flex' }}>
-        <div style={{ flex: 1 }}></div>
+        <div style={{ flex: 1 }} />
         <Notice to="/inmail" count={99} />
         <Dropdown
           overlay={
-            <Menu className="header-item" style={{ lineHeight: '64px' }} onClick={this.onMenuClick}>
-              <Menu.Item key="logout">
-                Sign out
-              </Menu.Item>
+            <Menu
+              className="header-item"
+              style={{ lineHeight: '64px' }}
+              onClick={this.onMenuClick}
+            >
+              <Menu.Item key="logout">Sign out</Menu.Item>
             </Menu>
           }
         >
@@ -43,11 +45,11 @@ class Header extends Component {
             {app.userInfo.username}
           </span>
         </Dropdown>
-
       </AntHeader>
-    )
+    );
   }
 }
 
-
-export default withRouter(connect(({ app, loading }) => ({ app, loading }))(Header))
+export default withRouter(
+  connect(({ app, loading }) => ({ app, loading }))(Header),
+);

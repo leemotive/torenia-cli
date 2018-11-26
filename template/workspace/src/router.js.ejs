@@ -9,13 +9,11 @@ import routes from './.torenia/router';
 const { ConnectedRouter } = routerRedux;
 
 window.g_history = <%= history %>({
-  basename: window.routerBase
+  basename: window.routerBase,
 });
 
 export default () => (
   <ConnectedRouter history={window.g_history}>
-    <Route render={({ location }) =>
-      renderRoutes(routes, {}, { location })
-    } />
+    <Route render={({ location }) => renderRoutes(routes, {}, { location })} />
   </ConnectedRouter>
-)
+);
