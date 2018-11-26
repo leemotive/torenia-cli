@@ -1,4 +1,3 @@
-
 const Walker = require('walker');
 const fs = require('fs');
 const JSON5 = require('json5');
@@ -9,9 +8,7 @@ const cwd = process.cwd();
 const srcDir = path.resolve(cwd, 'src');
 const pageDir = path.resolve(srcDir, 'pages');
 
-
 module.exports = () => {
-
   const walker = Walker(srcDir);
 
   const configs = [];
@@ -23,62 +20,83 @@ module.exports = () => {
       const pkg = require(file);
       let { torenia: configArr } = pkg;
       if (configArr && !Array.isArray(configArr)) {
-        configArr = [ configArr ];
+        configArr = [configArr];
       }
-      configArr && configArr.forEach(c => {
-        if (c) {
-          c.filePath = fileDirPath;
-          if (c.route === undefined) {
-            let entry = c.entry || '';
-            if (entry) {
-              let basename = path.basename(entry, '.js');
-              if (basename !== 'index') {
-                entry = basename;
-              } else {
-                entry = ''
+      configArr &&
+        configArr.forEach(c => {
+          if (c) {
+            c.filePath = fileDirPath;
+            if (c.route === undefined) {
+              let entry = c.entry || '';
+              if (entry) {
+                let basename = path.basename(entry, '.js');
+                if (basename !== 'index') {
+                  entry = basename;
+                } else {
+                  entry = '';
+                }
               }
+              c.route =
+                path
+                  .resolve(fileDirPath, entry)
+                  .replace(pageDir, '')
+                  .split(path.sep)
+                  .join('/')
+                  .replace(/\$id/g, ':id') || '/';
             }
-            c.route =  path.resolve(fileDirPath, entry).replace(pageDir, '').split(path.sep).join('/').replace(/\$id/g, ':id') || '/';
+            if (c.menu === undefined) {
+              c.menu = c.route || `/${pkg.name}`;
+            }
+            c.pkgName = pkg.name;
+            configs.push(c);
           }
-          if (c.menu === undefined) {
-            c.menu = c.route || `/${pkg.name}`;
-          }
-          c.pkgName = pkg.name;
-          configs.push(c);
-        }
-      })
-    } else if ('model.js' === name || fileDirPath.endsWith(`${path.sep}models`) && path.extname(name) === '.js') {
-      models.push(`  require(${JSON5.stringify(file, { quote: '\'' })}).default,`)
+        });
+    } else if (
+      'model.js' === name ||
+      (fileDirPath.endsWith(`${path.sep}models`) &&
+        path.extname(name) === '.js')
+    ) {
+      models.push(
+        `  require(${JSON5.stringify(file, { quote: "'" })}).default,`,
+      );
     }
   });
 
   walker.on('end', () => {
-
     // 生成路由
     const routes = [
       {
         path: `'/'`,
-        component: `require('${path.resolve(srcDir, 'layouts/index.js')}').default`,
-        routes: configs.filter(r => r && r.route).map(config => {
-          const { filePath, route, entry } = config;
-          return {
-            path: `'${route}'`,
-            exact: true,
-            component: `require('${path.resolve(filePath, entry || 'index.js')}').default`,
-          }
-        })
-      }
+        component: `require('${path.resolve(
+          srcDir,
+          'layouts/index.js',
+        )}').default`,
+        routes: configs
+          .filter(r => r && r.route)
+          .map(config => {
+            const { filePath, route, entry } = config;
+            return {
+              path: `'${route}'`,
+              exact: true,
+              component: `require('${path.resolve(
+                filePath,
+                entry || 'index.js',
+              )}').default`,
+            };
+          }),
+      },
     ];
 
     const routesString = JSON5.stringify(routes, {
       quote: ' ',
       space: 2,
-    }).replace(/(: ) /g, '$1').replace(/ ,/g, ',');
+    })
+      .replace(/(: ) /g, '$1')
+      .replace(/ ,/g, ',');
     const routesFile = path.resolve(srcDir, '.torenia/router.js');
     fse.outputFileSync(routesFile, `export default ${routesString};\n`, {
-      encoding: 'utf8'
+      encoding: 'utf8',
     });
-
 
     // 菜单生成
     const menuConfigs = configs.filter(c => c);
@@ -96,22 +114,19 @@ module.exports = () => {
       };
     });
     const menuString = JSON5.stringify(menus, {
-      quote: '\'',
+      quote: "'",
       space: 2,
     });
     const configFile = path.resolve(srcDir, '.torenia/menu.js');
     fse.outputFileSync(configFile, `export default ${menuString};\n`, {
-      encoding: 'utf8'
+      encoding: 'utf8',
     });
-
 
     // model生成
     const modelsString = models.join('\n');
     const containerFile = path.resolve(srcDir, '.torenia/models.js');
     fs.writeFileSync(containerFile, `export default [\n${modelsString}\n];\n`, {
-      encoding: 'utf8'
+      encoding: 'utf8',
     });
-
   });
-
-}
+};

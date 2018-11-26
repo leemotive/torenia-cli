@@ -8,8 +8,7 @@ const colors = require('colors');
 const cwd = process.cwd();
 const templateRoot = path.resolve(__dirname, '../template/workspace');
 
-module.exports = function (data) {
-
+module.exports = function(data) {
   const { name } = data;
 
   const projectRoot = path.resolve(cwd, name);
@@ -29,11 +28,9 @@ module.exports = function (data) {
   }
   spin();
 
-
   const walker = Walker(templateRoot);
-  walker.filterDir(dir => !dir.includes('node_modules'))
+  walker.filterDir(dir => !dir.includes('node_modules'));
   walker.on('file', file => {
-
     let targetFile = file.replace(templateRoot, projectRoot);
     const sourceFile = file;
 
@@ -44,29 +41,25 @@ module.exports = function (data) {
       fse.copy(sourceFile, targetFile);
     }
 
-
-    function write (err, content) {
+    function write(err, content) {
       if (err) {
-        console.log(err);
         hasRejected = true;
         return;
       }
       fs.writeFile(targetFile, content, 'utf8', err => {
         if (err) {
-          console.log(err);
           hasRejected = true;
           return;
         }
       });
     }
-
   });
 
   walker.on('dir', dir => {
     const newDir = dir.replace(templateRoot, projectRoot);
     try {
       fse.ensureDirSync(newDir);
-    } catch(e) {
+    } catch (e) {
       hasRejected = true;
     }
   });
@@ -78,10 +71,11 @@ module.exports = function (data) {
   process.on('exit', function() {
     if (hasRejected) {
       fse.removeSync(projectRoot);
+      /* eslint-disable-next-line no-console */
       console.error(colors.red('\rcreate project failed'));
     } else {
+      /* eslint-disable-next-line no-console */
       console.log('\rCreate project successfully');
     }
   });
-}
-
+};

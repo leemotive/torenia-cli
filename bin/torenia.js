@@ -10,44 +10,61 @@ const create = require('../command/create');
 const compile = require('../command/compile');
 const page = require('../command/page');
 
-yargs.command('create <name>', 'initialize project', yargs => {
-  return yargs.option('force', {
-    alias: 'f',
-    default: false,
-    describe: 'rewrite if the target directory exists',
-    type: 'boolean'
-  })
-}, argv => {
-  const { name, force } = argv;
+yargs.command(
+  'create <name>',
+  'initialize project',
+  yargs => {
+    return yargs.option('force', {
+      alias: 'f',
+      default: false,
+      describe: 'rewrite if the target directory exists',
+      type: 'boolean',
+    });
+  },
+  argv => {
+    const { name, force } = argv;
 
-  const projectRoot = path.resolve(process.cwd(), name);
-  if (fs.existsSync(projectRoot) && !force) {
-    console.error(colors.red(`${projectRoot} has exist`));
-    process.exit(1);
-  }
-
-  inquirer.prompt([
-    {
-      type: 'list',
-      name: 'history',
-      message: 'which history do you want to use?',
-      choices: [
-        { name: 'hashHistory', value: 'createHashHistory' },
-        { name: 'browserHistory', value: 'createBrowserHistory' },
-      ]
+    const projectRoot = path.resolve(process.cwd(), name);
+    if (fs.existsSync(projectRoot) && !force) {
+      /* eslint-disable-next-line no-console */
+      console.error(colors.red(`${projectRoot} has exist`));
+      process.exit(1);
     }
-  ]).then(answers => {
-    create({ ...answers, name, force });
-  })
 
-});
+    inquirer
+      .prompt([
+        {
+          type: 'list',
+          name: 'history',
+          message: 'which history do you want to use?',
+          choices: [
+            { name: 'hashHistory', value: 'createHashHistory' },
+            { name: 'browserHistory', value: 'createBrowserHistory' },
+          ],
+        },
+      ])
+      .then(answers => {
+        create({ ...answers, name, force });
+      });
+  },
+);
 
-yargs.command('compile', 'generate model, menu route', yargs => yargs, argv => {
-  compile();
-});
+yargs.command(
+  'compile',
+  'generate model, menu route',
+  yargs => yargs,
+  () => {
+    compile();
+  },
+);
 
-yargs.command('page', 'generate a page module', yargs => yargs, argv => {
-  page();
-})
+yargs.command(
+  'page',
+  'generate a page module',
+  yargs => yargs,
+  () => {
+    page();
+  },
+);
 
 yargs.argv;
