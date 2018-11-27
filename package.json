@@ -3,7 +3,7 @@
   "bin": {
     "torenia": "bin/torenia.js"
   },
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -29,7 +29,7 @@ module.exports = function(data) {
   spin();
 
   const walker = Walker(templateRoot);
-  walker.filterDir(dir => !dir.includes('node_modules'));
+  walker.filterDir(dir => !dir.endsWith('node_modules'));
   walker.on('file', file => {
     let targetFile = file.replace(templateRoot, projectRoot);
     const sourceFile = file;
