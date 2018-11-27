@@ -15,7 +15,7 @@ module.exports = {
       /favicon.ico/,
       /smscode/,
       /password\/forgot/,
-      /captcha/
-    ]
-  }
-}
+      /captcha/,
+    ],
+  },
+};
