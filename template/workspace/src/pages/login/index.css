@@ -14,8 +14,6 @@
   padding: 20px;
   box-shadow: 0 0 20px #000;
 
-
-
   :global {
     .form-submit-btn {
       width: 100%;
