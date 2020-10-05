@@ -15,10 +15,9 @@ if (pkg.torenia) {
   const cfg = require(path.resolve(cwd, '.torenia.config.js'));
   srcPath = cfg.src;
   pagePath = cfg.pages;
-} else {
-  srcPath = 'src';
-  pagePath = 'pages'
 }
+srcPath || (srcPath = 'src');
+pagePath || (pagePath = 'pages');
 
 const srcDir = path.resolve(cwd, srcPath);
 const pageDir = path.resolve(srcDir, pagePath);
