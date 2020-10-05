@@ -7,7 +7,7 @@ const fse = require('fs-extra');
 const cwd = process.cwd();
 
 let srcPath, pagePath;
-const pkg = require(path.require(cwd, 'package.json'))
+const pkg = require(path.resolve(cwd, 'package.json'))
 if (pkg.torenia) {
   srcPath = pkg.torenia.src;
   pagePath = pkg.torenia.pages;
