@@ -5,8 +5,23 @@ const path = require('path');
 const fse = require('fs-extra');
 
 const cwd = process.cwd();
-const srcDir = path.resolve(cwd, 'src');
-const pageDir = path.resolve(srcDir, 'pages');
+
+let srcPath, pagePath;
+const pkg = require(path.require(cwd, 'package.json'))
+if (pkg.torenia) {
+  srcPath = pkg.torenia.src;
+  pagePath = pkg.torenia.pages;
+} else if (fs.existsSync(path.resolve(cwd, '.torenia.config.js'))) {
+  const cfg = require(path.resolve(cwd, '.torenia.config.js'));
+  srcPath = cfg.src;
+  pagePath = cfg.pages;
+} else {
+  srcPath = 'src';
+  pagePath = 'pages'
+}
+
+const srcDir = path.resolve(cwd, srcPath);
+const pageDir = path.resolve(srcDir, pagePath);
 
 module.exports = () => {
   const walker = Walker(srcDir);
